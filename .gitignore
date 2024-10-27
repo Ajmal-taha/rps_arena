@@ -56,3 +56,6 @@ dmypy.sock
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
+
+#extra files
+mydb.py
