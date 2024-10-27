@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'styles/base.css' %}">
+        {% block extra_css %}{% endblock %}
+        <!--Google Fonts: Oxanium-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet">
+        <!--Google Icons: play_arrow, Logout-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        
+    <title>RPS Arena</title>
+</head>
+<body>
+    <header class="header">
+        <div class="logo"><a href="#">Welcome</a></div>
+        <div class="hamburger">☰</div>
+        <nav class="navbar">
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+
+                <li><a href="{% url 'leader_boards' %}">Leader boards</a></li>
+                
+                <li><a class="logout-button" href="{% url 'logout_user' %}"><span class="material-symbols-outlined">logout</span>Logout</a>
+                </li>
+
+                <li><a class="profile-button" href="{% url 'profile' %}"><span class="material-symbols-outlined">account_circle</span>Profile</a>
+                </li>
+                {% else %}
+                <li><a href="{% url 'sign_up' %}">Sign up</a></li>
+                
+                <li><a class="login-button" href="{% url 'login_user' %}"><span class="material-symbols-outlined">login</span>Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    <span>{{ message }}</span>
+                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="trailer">made by Mohd Ajmal Taha, Copyright 2024</footer>
+    <script>
+        document.querySelector('.hamburger').addEventListener("click", () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('show');
+            console.log(navbar.classList);
+        })
+    </script>
+</body>
+</html>
