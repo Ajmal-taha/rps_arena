@@ -1,12 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .forms import SignUpForm
 
 def home(request):
     return render(request, 'home.html')
 
 def sign_up(request):
-    return render(request, 'sign_up.html')
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #Authenicate and login
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, 'Sign Up Successfully')
+            return redirect('home')
+    else:
+        form = SignUpForm()
+        return render(request, 'sign_up.html', {'form':form})
+
+    return render(request, 'sign_up.html', {'form':form})
 
 def leader_boards(request):
     return render(request, 'leader_boards.html')
@@ -34,3 +50,6 @@ def logout_user(request):
 
 def profile(request):
     return render(request, 'profile.html')
+
+def game(request):
+    return render(request, 'game_page.html')

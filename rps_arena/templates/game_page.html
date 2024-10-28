@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/game_page.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>This is the Game page</h1>
+<div class="game-home">
+    <button class="rock-button">
+        <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
+    </button>
+    <button class="paper-button">
+        <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
+    </button>
+    <button class="scissors-button">
+        <img src="https://img.icons8.com/ios/50/hand-peace--v1.png" alt="hand-peace--v1"/>
+    </button>
+</div>
+{% endblock %}

@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Profile</h1>
+<h1 class="profile-heading">Profile</h1>
+    <div class="personal-info-grid">
+        <div class="name field">Name:</div><div class="value">{{ user.username }}</div>
+        <div class="something field">Matches Played:</div><div class="value">69</div>
+        <div class="otherthing field">Won:</div><div class="value">30</div>
+        <div class="thisthing field">Lost:</div><div class="value">39</div>
+        <div class="thatthing field">Draw:</div><div class="value">0</div>
+        <div class="thatthing field">Points:</div><div class="value">1200</div>
+        <div class="thatthing field">Rank:</div><div class="value">12</div>
+    </div>
 {% endblock %}

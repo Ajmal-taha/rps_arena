@@ -7,26 +7,21 @@
 
 {% block content %}
 <div class="home">
-    <div class="body-text">Hello and Welcome to The Game of Ajmal</div>
+    <div class="body-text">Welcome to The Game of Ajmal</div>
     {% if user.is_authenticated %}
+    <div class="body-text">Hello, {{ user.first_name }} {{ user.last_name }}</div>
     <div class="body-text">Click Play to Start the Game</div>
 
     <button class="start-button"><span class="material-symbols-outlined">play_arrow</span>Start</button>
 </div>
-
-<div class="game-home">
-    <button class="rock-button">
-        <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
-    </button>
-    <button class="paper-button">
-        <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
-    </button>
-    <button class="scissors-button">
-        <img src="https://img.icons8.com/ios/50/hand-peace--v1.png" alt="hand-peace--v1"/>
-    </button>
-</div>
 {% else %}
     <div class="body-text">Go and get login to get Started</div>
 {% endif %}
+
+<script>
+    document.querySelector(".start-button").addEventListener('click', () => {
+        window.location.href = "{% url 'game' %}";
+    })
+</script>
 
 {% endblock %}

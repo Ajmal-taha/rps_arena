@@ -1,6 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/sign_up.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Sign Up</h1>
+
+<form class="sign_up_form" method="POST" action="">
+    {% csrf_token %}
+    {% if form.errors %}
+        <div class="error-container">
+            {% for field in form %}
+                {% if field.errors %}
+                <div class="error-message">
+                    <span>{{ field.errors }}</span>
+                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h1 class="title_sign_up">Sign Up</h1>
+
+    {{ form.as_p }}
+
+    <button class="sign_up_button" type="submit">Sign Up</button>
+</form>
 {% endblock %}
