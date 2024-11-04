@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Room</title>
+</head>
+<body>
+    Welcome to game room
+    <textarea  class="chat-area" cols="50" rows="10"></textarea>
+    <input type="text" class="chat-input">
+    <button class="send-message-button">Send</button>
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const gameSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/game/'
+            + roomName
+            + '/'
+        );
+
+        gameSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data.message)
+            document.querySelector(".chat-area").value += (data.message + '\n');
+        }
+
+        document.querySelector('.chat-input').focus();
+        document.querySelector('.send-message-button').addEventListener('click', (event) => {
+            const messageInputDom = document.querySelector('.chat-input');
+            const message = messageInputDom.value;
+            console.log("message to be sent ${message}")
+            gameSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = "";
+        });
+    </script>
+</body>
+</html>

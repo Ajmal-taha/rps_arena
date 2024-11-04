@@ -53,3 +53,6 @@ def profile(request):
 
 def game(request):
     return render(request, 'game_page.html')
+
+def game_room(request, room_name):
+    return render(request, 'game_room.html', {'room_name': room_name})
