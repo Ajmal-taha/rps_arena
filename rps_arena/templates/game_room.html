@@ -6,10 +6,22 @@
     <title>Game Room</title>
 </head>
 <body>
-    Welcome to game room
-    <textarea  class="chat-area" cols="50" rows="10"></textarea>
-    <input type="text" class="chat-input">
-    <button class="send-message-button">Send</button>
+    <div class="user-name">
+        {% if user.is_authenticated %}
+        {{ user.username }}
+        {% endif %}
+    </div>
+    <button class="rock-button">
+    <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
+    </button>
+    <button class="paper-button">
+        <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
+    </button>
+    <button class="scissors-button">
+        <img src="https://img.icons8.com/ios/50/hand-peace--v1.png" alt="hand-peace--v1"/>
+    </button>
+    <div class="your-choice"></div>
+    <div class="opponent-choice"></div>
     {{ room_name|json_script:"room-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
@@ -24,19 +36,23 @@
 
         gameSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            console.log(data.message)
-            document.querySelector(".chat-area").value += (data.message + '\n');
+            document.querySelector(".your-choice").innerHTML = data.message;
         }
 
-        document.querySelector('.chat-input').focus();
-        document.querySelector('.send-message-button').addEventListener('click', (event) => {
-            const messageInputDom = document.querySelector('.chat-input');
-            const message = messageInputDom.value;
-            console.log("message to be sent ${message}")
+        document.querySelector('.rock-button').addEventListener('click', (event) => {
             gameSocket.send(JSON.stringify({
-                'message': message
+                'message': 'rock'
             }));
-            messageInputDom.value = "";
+        });
+        document.querySelector('.paper-button').addEventListener('click', (event) => {
+            gameSocket.send(JSON.stringify({
+                'message': 'paper'
+            }));
+        });
+        document.querySelector('.scissors-button').addEventListener('click', (event) => {
+            gameSocket.send(JSON.stringify({
+                'message': 'scissors'
+            }));
         });
     </script>
 </body>
