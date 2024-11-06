@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm
+from .models import GameRoom
 
 def home(request):
     return render(request, 'home.html')
@@ -24,6 +25,7 @@ def sign_up(request):
 
     return render(request, 'sign_up.html', {'form':form})
 
+@login_required
 def leader_boards(request):
     return render(request, 'leader_boards.html')
 
@@ -43,16 +45,36 @@ def login_user(request):
 
     return render(request, 'login.html', {})
 
+@login_required
 def logout_user(request):
     logout(request)
     messages.success(request, 'you have been logged out')
     return redirect('home')
 
+@login_required
 def profile(request):
     return render(request, 'profile.html')
 
+@login_required
 def game(request):
     return render(request, 'game_page.html')
 
+@login_required
 def game_room(request, room_name):
+    # Check if the game room already exists
+    game_room, created = GameRoom.objects.get_or_create(room_name=room_name)
+
+    # Check if there's space in the room (user_count < 2)
+    if game_room.user_count < 2:
+        # Add the user to the room if they aren't already in it
+        if request.user not in game_room.users.all():
+            game_room.users.add(request.user)
+            game_room.user_count += 1
+            game_room.save()
+    else:
+        # If room is full, redirect the user and display a message
+        messages.error(request, 'Game room already full')
+        return redirect(request, 'game_page.html')
+
+    # Render the game room template with room_name and other context
     return render(request, 'game_room.html', {'room_name': room_name})

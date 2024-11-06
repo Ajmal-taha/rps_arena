@@ -12,7 +12,7 @@
         {% endif %}
     </div>
     <button class="rock-button">
-    <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
+        <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
     </button>
     <button class="paper-button">
         <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
@@ -27,33 +27,39 @@
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
         const gameSocket = new WebSocket(
-            'ws://'
+            (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
             + window.location.host
             + '/ws/game/'
             + roomName
             + '/'
         );
 
+        gameSocket.onopen = function () {
+            console.log("WebSocket connection established");
+        };
+
         gameSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
+            console.log("Message received:", data.message); // Debugging line
             document.querySelector(".your-choice").innerHTML = data.message;
+        };
+
+        gameSocket.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+
+        function sendChoice(choice) {
+            if (gameSocket.readyState === WebSocket.OPEN) {
+                gameSocket.send(JSON.stringify({ 'message': choice }));
+                console.log("Choice sent:", choice); // Debugging line
+            } else {
+                console.error("WebSocket connection not open");
+            }
         }
 
-        document.querySelector('.rock-button').addEventListener('click', (event) => {
-            gameSocket.send(JSON.stringify({
-                'message': 'rock'
-            }));
-        });
-        document.querySelector('.paper-button').addEventListener('click', (event) => {
-            gameSocket.send(JSON.stringify({
-                'message': 'paper'
-            }));
-        });
-        document.querySelector('.scissors-button').addEventListener('click', (event) => {
-            gameSocket.send(JSON.stringify({
-                'message': 'scissors'
-            }));
-        });
+        document.querySelector('.rock-button').addEventListener('click', () => sendChoice('rock'));
+        document.querySelector('.paper-button').addEventListener('click', () => sendChoice('paper'));
+        document.querySelector('.scissors-button').addEventListener('click', () => sendChoice('scissors'));
     </script>
 </body>
 </html>
