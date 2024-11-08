@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm
-from .models import GameRoom
+from .models import GameRoom, GamePlayer
 
 def home(request):
     return render(request, 'home.html')
@@ -17,6 +18,7 @@ def sign_up(request):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
+            GamePlayer.objects.create(user = user)
             messages.success(request, 'Sign Up Successfully')
             return redirect('home')
     else:
@@ -57,10 +59,12 @@ def profile(request):
 
 @login_required
 def game(request):
-    return render(request, 'game_page.html')
+    context = {'game_rooms': GameRoom.objects.all()}
+    return render(request, 'game_page.html', context)
 
 @login_required
 def game_room(request, room_name):
+    
     # Check if the game room already exists
     game_room, created = GameRoom.objects.get_or_create(room_name=room_name)
 

@@ -2,6 +2,8 @@ import json
 import redis.asyncio as redis
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
+from asgiref.sync import sync_to_async
+from .models import GameRoom, GamePlayer
 
 class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,6 +25,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        await self.remove_user_from_room()
         # Close Redis connection
         await self.redis.close()
 
@@ -75,3 +78,23 @@ class GameConsumer(AsyncWebsocketConsumer):
         choices = await self.redis.hgetall(f"choices_{self.room_group_name}")
         # Convert binary data to strings
         return {int(user_id.decode('utf-8')): choice.decode('utf-8') for user_id, choice in choices.items()}
+    
+    @sync_to_async(thread_sensitive=False)
+    def remove_user_from_room(self):
+        try:
+            # Retrieve the game room
+            game_room = GameRoom.objects.filter(room_name=self.room_name).first()
+            
+            if game_room:
+                # Decrease user count and remove user from room
+                game_room.user_count -= 1
+                game_room.users.remove(self.scope["user"])
+                
+                # Delete the room if it's empty, otherwise save the updated instance
+                if game_room.user_count <= 0:
+                    game_room.delete()
+                else:
+                    game_room.save()
+                    
+        except Exception as e:
+            print(f"Error while disconnecting user: {e}")

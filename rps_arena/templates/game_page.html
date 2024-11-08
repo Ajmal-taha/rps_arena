@@ -7,21 +7,42 @@
 
 {% block content %}
 <h1>This is the Game page</h1>
-<div class="game-home">
+<div class="create-room">
+    <p>Create a game room</p>
+    <label for="game-room-name">Room Name: </label>
     <input type="text" class="game-room-name" placeholder="enter room name">
     <button class="game-enter-button">Join</button>
+</div>
+<div class="join-room">
+    <p>Join a Game Room</p>
+    <ul class="game_rooms">
+        {% for game_room in game_rooms %}
+        <li>
+            <p>room name: {{game_room.room_name}}</p>
+            <p>user count:{{game_room.user_count}}</p>
+            <button class="game_room-join-button" data-room-name="{{game_room.room_name}}">Join</button>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
     <script>
         document.querySelector(".game-room-name").focus();
         document.querySelector(".game-room-name").onkeyup = function(e) {
             if (e.key === 'Enter') {  // enter, return
-                document.querySelector('#room-name-submit').click();
+                document.querySelector('.game-enter-button').click();
             }
         };
         document.querySelector(".game-enter-button").addEventListener('click', (event) => {
             var roomName = document.querySelector(".game-room-name").value;
             window.location.pathname = "/game/" + roomName + "/";
         })
+
+        document.querySelectorAll(".game_room-join-button").forEach(element => {
+            element.addEventListener('click', (event) => {
+                var roomName = element.getAttribute("data-room-name");
+                window.location.pathname = "/game/" + roomName + "/";
+            });
+        });
     </script>
 
 {% endblock %}

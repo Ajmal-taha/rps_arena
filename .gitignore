@@ -60,3 +60,4 @@ dmypy.sock
 #extra files
 mydb.py
 battle_hands_project/settings.py
+rps_arena/migrations

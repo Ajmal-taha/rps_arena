@@ -1,12 +1,15 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-class GamePlayer(models.Models):
-    user = models.OneToOneField(User, related_name="Players-info")
+class GamePlayer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 class GameRoom(models.Model):
     room_name = models.CharField(max_length=100, unique=True)

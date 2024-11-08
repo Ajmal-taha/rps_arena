@@ -26,7 +26,7 @@
 
                 <li><a href="{% url 'leader_boards' %}">Leader boards</a></li>
                 
-                <li><a class="logout-button" href="{% url 'logout_user' %}"><span class="material-symbols-outlined">logout</span>Logout</a>
+                <li><a class="logout-button" href="{% url 'logout' %}"><span class="material-symbols-outlined">logout</span>Logout</a>
                 </li>
 
                 <li><a class="profile-button" href="{% url 'profile' %}"><span class="material-symbols-outlined">account_circle</span>Profile</a>
@@ -34,7 +34,7 @@
                 {% else %}
                 <li><a href="{% url 'sign_up' %}">Sign up</a></li>
                 
-                <li><a class="login-button" href="{% url 'login_user' %}"><span class="material-symbols-outlined">login</span>Login</a>
+                <li><a class="login-button" href="{% url 'login' %}"><span class="material-symbols-outlined">login</span>Login</a>
                 </li>
                 {% endif %}
             </ul>
