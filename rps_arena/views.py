@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from .forms import SignUpForm
 from .models import GameRoom, GamePlayer
 
@@ -82,3 +83,9 @@ def game_room(request, room_name):
 
     # Render the game room template with room_name and other context
     return render(request, 'game_room.html', {'room_name': room_name})
+
+def search_game_rooms(request):
+    query = request.GET.get('q', '')
+    game_rooms = GameRoom.objects.filter(room_name__icontains= query)
+    data = [{"room_name":room.room_name, "user_count":room.user_count} for room in game_rooms]
+    return JsonResponse(data, safe=False)

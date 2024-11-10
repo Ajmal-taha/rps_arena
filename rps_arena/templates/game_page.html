@@ -6,24 +6,29 @@
 {% endblock %}
 
 {% block content %}
-<h1>This is the Game page</h1>
-<div class="create-room">
-    <p>Create a game room</p>
-    <label for="game-room-name">Room Name: </label>
-    <input type="text" class="game-room-name" placeholder="enter room name">
-    <button class="game-enter-button">Join</button>
+<div class="game-rooms-page">
+    <div class="heading">
+        Game Rooms
+    </div>
+    <div class="create-room">
+        <sub-heading>Create a game room</sub-heading>
+        <label for="game-room-name">Room Name: </label>
+        <input type="text" class="game-room-name" placeholder="enter room name" required>
+        <button class="game-enter-button">Create</button>
+    </div>
+    <div class="join-room">
+        <sub-heading>Join a Game Room</sub-heading>
+        <input type="text" id="search-bar" placeholder="Search game rooms">
+        <ul class="game_rooms" id="game-rooms-list">
+            {% for game_room in game_rooms %}
+            <li>
+                <p>room name: {{game_room.room_name}}</p>
+                <p>user count:{{game_room.user_count}}</p>
+                <button class="game_room-join-button" data-room-name="{{game_room.room_name}}" data-user-count="{{game_room.user_count}}">Join</button>
+            </li>
+            {% endfor %}
+        </ul>
 </div>
-<div class="join-room">
-    <p>Join a Game Room</p>
-    <ul class="game_rooms">
-        {% for game_room in game_rooms %}
-        <li>
-            <p>room name: {{game_room.room_name}}</p>
-            <p>user count:{{game_room.user_count}}</p>
-            <button class="game_room-join-button" data-room-name="{{game_room.room_name}}">Join</button>
-        </li>
-        {% endfor %}
-    </ul>
 </div>
     <script>
         document.querySelector(".game-room-name").focus();
@@ -33,15 +38,57 @@
             }
         };
         document.querySelector(".game-enter-button").addEventListener('click', (event) => {
+            console.log('button was clicked')
             var roomName = document.querySelector(".game-room-name").value;
-            window.location.pathname = "/game/" + roomName + "/";
+            if(roomName === "") {
+                console.log("enter correct room name");
+            }
+            else{
+                window.location.pathname = "/game/" + roomName + "/";
+            }
         })
 
         document.querySelectorAll(".game_room-join-button").forEach(element => {
+
             element.addEventListener('click', (event) => {
                 var roomName = element.getAttribute("data-room-name");
                 window.location.pathname = "/game/" + roomName + "/";
             });
+            var userCount = element.getAttribute("data-user-count");
+            if(userCount >= 2){
+                element.setAttribute("disabled", "true");
+                element.classList.add("disabled-button");
+            }
+        });
+
+        document.getElementById('search-bar').addEventListener('input', function () {
+            const query = this.value;
+            fetch(`/search-game-rooms/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const gameRoomsList = document.getElementById('game-rooms-list');
+                    gameRoomsList.innerHTML = ''; // clear current list
+                    if(data.length === 0){
+                        const li = document.createElement('li');
+                        li.innerHTML = "No game Rooms Found";
+                        gameRoomsList.appendChild(li);
+                    }
+                    else{
+                        data.forEach(room => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <p>room name: ${room.room_name}</p>
+                                <p>user count: ${room.user_count}</p>
+                                <button class="game_room-join-button ${room.user_count >= 2 ? 'disabled-button' : ''}"
+                                        data-room-name="${room.room_name}"
+                                        data-user-count="${room.user_count}"
+                                        ${room.user_count >= 2 ? 'disabled' : ''}
+                                >Join</button>
+                            `;
+                            gameRoomsList.appendChild(li);
+                        });
+                    }
+                });
         });
     </script>
 

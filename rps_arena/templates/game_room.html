@@ -3,28 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Loading styles-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/game_room.css' %}">
+    <!--Google Fonts: Oxanium-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet">
     <title>Game Room</title>
 </head>
 <body>
-    <div class="user-name">
+    <div class="heading">Room Name: </div>
+    <!-- <div class="user-name">
         {% if user.is_authenticated %}
         {{ user.username }}
         {% endif %}
+    </div> -->
+    <div class="in-room-users">In Room: </div>
+    <div class="waiting-to-join">Waiting for opponent to join...</div>
+    <div class="main-game-div">
+        <div class="choices-div">
+            <button class="rock-button choice-button">
+                <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
+            </button>
+            <button class="paper-button choice-button">
+                <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
+            </button>
+            <button class="scissors-button choice-button">
+                <img src="https://img.icons8.com/ios/50/hand-peace--v1.png" alt="hand-peace--v1"/>
+            </button>
+        </div>
+        <div class="select-choice-message">Select a choice</div>
+        <div class="waiting-opponent-choice">Waiting for opponent...</div>
     </div>
-    <button class="rock-button">
-        <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
-    </button>
-    <button class="paper-button">
-        <img src="https://img.icons8.com/ios-filled/50/so-so.png" alt="so-so"/>
-    </button>
-    <button class="scissors-button">
-        <img src="https://img.icons8.com/ios/50/hand-peace--v1.png" alt="hand-peace--v1"/>
-    </button>
-    <div class="your-choice"></div>
-    <div class="opponent-choice"></div>
+    <div class="result-div">
+        <div class="you-won">You Won!</div>
+        <div class="you-lost">You Lost</div>
+        <div class="choices">
+            <div class="your-choice">You: Rock</div>
+            <div class="opponent-choice">Opponent: Paper</div>
+        </div>
+    </div>
     {{ room_name|json_script:"room-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        document.querySelector('.heading').innerHTML += roomName;
+
+        document.querySelector('.main-game-div').style.display = "none";
+        document.querySelector('.result-div').style.display = "none";
 
         const gameSocket = new WebSocket(
             (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
@@ -41,17 +67,53 @@
         gameSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             console.log("Message received:", data.message); // Debugging line
-            document.querySelector(".your-choice").innerHTML = data.message;
+            const messageHandlers = {
+                player_joined: () => {
+                    if(data.message.length === 1){
+                        document.querySelector('.in-room-users').innerHTML = `In Room: ${data.message}`;
+                    }
+                    else if(data.message.length === 2){
+                        document.querySelector('.in-room-users').innerHTML = `In Room: ${data.message}`;
+                        document.querySelector('.waiting-to-join').style.display = "none";
+                        document.querySelector('.main-game-div').style.display = "flex";
+                        document.querySelector('.waiting-opponent-choice').style.display = "none";
+                    }
+                    console.log(`player joined message: ${data.message}`);
+                },
+
+                game_result: () => {
+                    // Handle game result display
+                    // document.querySelector('.result').innerText = data.result;
+                    console.log(`result message: ${data.result}`);
+                },
+
+                opponents_choice: () => {
+                    console.log(`opponents choice: ${data.message}`);
+                },
+            };
+
+            const handler = messageHandlers[data.type];
+            if (handler) {
+                handler();
+            } else {
+                console.log("Unhandled message type:", data.type);
+            }
         };
 
         gameSocket.onclose = function () {
             console.log("WebSocket connection closed");
         };
-
+        
         function sendChoice(choice) {
+            console.log(`sending choice: ${choice}`);
             if (gameSocket.readyState === WebSocket.OPEN) {
-                gameSocket.send(JSON.stringify({ 'message': choice }));
-                console.log("Choice sent:", choice); // Debugging line
+                gameSocket.send(JSON.stringify({
+                    'type': 'my_choice',
+                    'content': {
+                        "choice": choice,
+                    }
+                }));
+                console.log("Choice sent:", choice);
             } else {
                 console.error("WebSocket connection not open");
             }
@@ -60,6 +122,15 @@
         document.querySelector('.rock-button').addEventListener('click', () => sendChoice('rock'));
         document.querySelector('.paper-button').addEventListener('click', () => sendChoice('paper'));
         document.querySelector('.scissors-button').addEventListener('click', () => sendChoice('scissors'));
+
+        document.querySelectorAll('.choice-button').forEach(button => button.addEventListener('click', (event) => {
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.setAttribute("disabled", "true");
+                button.classList.add("disabled-button");
+            });
+            document.querySelector('.select-choice-message').style.display = "none";
+            document.querySelector('.waiting-opponent-choice').style.display = "block";
+        }));
     </script>
 </body>
 </html>
