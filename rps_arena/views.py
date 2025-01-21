@@ -30,7 +30,13 @@ def sign_up(request):
 
 @login_required
 def leader_boards(request):
-    return render(request, 'leader_boards.html')
+    current_user = request.user
+    user_GamePayer_obj = GamePlayer.objects.get(user = current_user)
+    # Count how many players have more points than the current user
+    user_rank = GamePlayer.objects.filter(points__gt=user_GamePayer_obj.points).count() + 1
+
+    top_players = GamePlayer.objects.order_by('-points')[:10]
+    return render(request, 'leader_boards.html', {'user_obj' : user_GamePayer_obj, 'user_rank':user_rank, 'top_players' : top_players})
 
 def login_user(request):
     if request.method == 'POST':
@@ -44,7 +50,7 @@ def login_user(request):
             return redirect('home')
         else:
             messages.error(request, 'Invalid username or password')
-            redirect('login_user')
+            redirect('login')
 
     return render(request, 'login.html', {})
 
@@ -56,10 +62,17 @@ def logout_user(request):
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    current_user = request.user
+    user_GamePayer_obj = GamePlayer.objects.get(user = current_user)
+
+    # Count how many players have more points than the current user
+    user_rank = GamePlayer.objects.filter(points__gt=user_GamePayer_obj.points).count() + 1
+    print(f"loading profile for {user_GamePayer_obj}")
+    return render(request, 'profile.html', {'user_obj' : user_GamePayer_obj, 'user_rank': user_rank})
 
 @login_required
 def game(request):
+    print('inside game method in views')
     context = {'game_rooms': GameRoom.objects.all()}
     return render(request, 'game_page.html', context)
 
@@ -82,7 +95,7 @@ def game_room(request, room_name):
         return redirect(request, 'game_page.html')
 
     # Render the game room template with room_name and other context
-    return render(request, 'game_room.html', {'room_name': room_name})
+    return render(request, 'game_room.html', {'room_name': room_name, 'you': request.user.username})
 
 def search_game_rooms(request):
     query = request.GET.get('q', '')

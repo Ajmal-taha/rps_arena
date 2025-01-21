@@ -1,6 +1,107 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/leaderboards.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Leader Boards</h1>
+<div class="leaderboard-container">
+    <h1 class="leaderboard-heading">Leaderboard</h1>
+    <div class="leaderboard-table">
+        <div class="leaderboard-header">
+            <div class="rank">Rank</div>
+            <div class="username">Username</div>
+            <div class="points">Points</div>
+        </div>
+        {% for player in top_players %}
+            {% if forloop.counter == 1 %}
+                <div class="leaderboard-row first">
+                    <div class="rank"><img src="https://img.icons8.com/arcade/64/first-place-ribbon.png" alt="gold medal" width="30" height="30"></div>
+                    <div class="username">
+                        {{ player.user.username }}
+                        {% if player == user_obj %}
+                            <span class="you-span">(you)</span>
+                        {% endif %}
+                    </div>
+                    <div class="points">{{ player.points }}</div>
+                </div>
+            {% elif forloop.counter == 2 %}
+                <div class="leaderboard-row second">
+                    <div class="rank"><img src="https://img.icons8.com/arcade/64/second-place-ribbon.png" alt="silver medal" width="30" height="30"></div>
+                    <div class="username">
+                        {{ player.user.username }}
+                        {% if player == user_obj %}
+                            <span class="you-span">(you)</span>
+                        {% endif %}
+                    </div>
+                    <div class="points">{{ player.points }}</div>
+                </div>
+            {% elif forloop.counter == 3 %}
+                <div class="leaderboard-row third">
+                    <div class="rank"><img src="https://img.icons8.com/arcade/64/third-place-ribbon.png" alt="bronze medal" width="30" height="30"></div>
+                    <div class="username">
+                        {{ player.user.username }}
+                        {% if player == user_obj %}
+                            <span class="you-span">(you)</span>
+                        {% endif %}
+                    </div>
+                    <div class="points">{{ player.points }}</div>
+                </div>
+            {% else %}
+                <div class="leaderboard-row">
+                    <div class="rank">{{ forloop.counter }}</div>
+                    <div class="username">
+                        {{ player.user.username }}
+                        {% if player == user_obj %}
+                            <span class="you-span">(you)</span>
+                        {% endif %}
+                    </div>
+                    <div class="points">{{ player.points }}</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <!-- <div class="leaderboard-row first">
+            <div class="rank"><img src="https://img.icons8.com/arcade/64/first-place-ribbon.png" alt="gold medal" width="30" height="30"></div>
+            <div class="username">JohnDoe</div>
+            <div class="points">1500</div>
+        </div>
+        <div class="leaderboard-row second">
+            <div class="rank"><img src="https://img.icons8.com/arcade/64/second-place-ribbon.png" alt="silver medal" width="30" height="30"></div>
+            <div class="username">JaneSmith</div>
+            <div class="points">1400</div>
+        </div>
+        <div class="leaderboard-row third">
+            <div class="rank"><img src="https://img.icons8.com/arcade/64/third-place-ribbon.png" alt="bronze medal" width="30" height="30"></div>
+            <div class="username">PlayerX</div>
+            <div class="points">1350</div>
+        </div> -->
+        <!-- dummy users, to be removed later -->
+        <div class="leaderboard-row">
+            <div class="rank">4</div>
+            <div class="username">NoobMaster69</div>
+            <div class="points">1200</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="rank">5</div>
+            <div class="username">ProGamer</div>
+            <div class="points">1150</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="rank">6</div>
+            <div class="username">ProGamer2</div>
+            <div class="points">1005</div>
+        </div>
+        <!-- Current user row -->
+         {% if user_obj not in top_players %}
+            <div class="leaderboard-row current-user-row">
+                <div class="rank">{{ user_rank }}</div>
+                <div class="username">{{ user_obj.user.username }}<span class="you-span">(you)</span></div>
+                <div class="points">{{ user_obj.points }}</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
 {% endblock %}

@@ -13,15 +13,56 @@
     <title>Game Room</title>
 </head>
 <body>
-    <div class="heading">Room Name: </div>
+    <div class="heading">
+        <div class="room-name-heading">Room Name: </div>
+        <div class="leave-button">Leave</div>
+    </div>
     <!-- <div class="user-name">
         {% if user.is_authenticated %}
         {{ user.username }}
         {% endif %}
     </div> -->
-    <div class="in-room-users">In Room: </div>
+    <div class="in-room-users">
+        <div class="you-username">
+            You: <span class="your-name">{{ you }}</span>
+            <img class="symbol" width="30" height="30" src="https://img.icons8.com/ios/50/batman-old.png" alt="batman-old"/>
+        </div>
+        <div class="versus">V/S</div>
+        <div class="opponent-username">
+            Opponent: <span class="opponent-name"></span>
+            <img class="symbol" width="30" height="30" src="https://img.icons8.com/sf-regular-filled/48/superman.png" alt="superman"/>
+        </div>
+    </div>
+
     <div class="waiting-to-join">Waiting for opponent to join...</div>
+
+    <!-- leave Confirmation -->
+    <div id="popup-container" class="popup-container">
+        <div class="popup">
+            <h2>Are you sure you want to leave?</h2>
+            <p>If you leave, you may lose the battle.</p>
+            <div class="popup-buttons">
+                <button id="confirm-leave" class="confirm">Yes, Leave</button>
+                <button id="cancel-leave" class="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounds-results">
+        <div class="round-result round-1">1</div>
+        <div class="round-result round-2">2</div>
+        <div class="round-result round-3">3</div>
+    </div>
+
+    <div class="game-result">
+        <div class="you-won">You Won!</div>
+        <div class="you-lost">You Lost</div>
+        <div class="you-draw">Draw</div>
+    </div>
+
     <div class="main-game-div">
+        <div class="round-number-container">Round<span class="round-number">1</span></div>
+        
         <div class="choices-div">
             <button class="rock-button choice-button">
                 <img src="https://img.icons8.com/ios/50/angry-fist--v1.png" alt="angry-fist--v1"/>
@@ -36,21 +77,48 @@
         <div class="select-choice-message">Select a choice</div>
         <div class="waiting-opponent-choice">Waiting for opponent...</div>
     </div>
-    <div class="result-div">
-        <div class="you-won">You Won!</div>
-        <div class="you-lost">You Lost</div>
-        <div class="choices">
-            <div class="your-choice">You: Rock</div>
-            <div class="opponent-choice">Opponent: Paper</div>
-        </div>
+    <div class="prev-round-result-container">
+        <!-- <div class="choices">
+            <div class="your-choice">You: </div>
+            <div class="opponent-choice">Opponent: </div>
+        </div> -->
+    </div>
+    <div class="play-again-container">
+        <button id="leave-room-round" class="leave-room-round">Leave</button>
+        <button id="play-again" class="play-again">Play again</button>
     </div>
     {{ room_name|json_script:"room-name" }}
+    {{ you|json_script:"you"}}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        document.querySelector('.heading').innerHTML += roomName;
+        document.querySelector('.room-name-heading').innerHTML += roomName;
 
+        document.querySelector('.rounds-results').style.display = "none";
+        document.querySelector('.game-result').style.display = "none";
         document.querySelector('.main-game-div').style.display = "none";
-        document.querySelector('.result-div').style.display = "none";
+        document.querySelector('.prev-round-result-container').style.display = "none";
+        document.querySelector('.play-again-container').style.display = "none";
+
+        document.querySelector('.leave-button').addEventListener('click', () => {
+            document.getElementById("popup-container").style.display = "flex";
+        });
+
+        document.getElementById("cancel-leave").addEventListener("click", () => {
+            document.getElementById("popup-container").style.display = "none";
+        });
+
+        document.getElementById("confirm-leave").addEventListener("click", () => {
+            console.log(`sending leave message to backend`);
+            if (gameSocket.readyState === WebSocket.OPEN) {
+                gameSocket.send(JSON.stringify({
+                    'type': 'leave',
+                }));
+                console.log("leave message sent");
+            } else {
+                console.error("WebSocket connection not open");
+            }
+            window.location.pathname = "/game";
+        });
 
         const gameSocket = new WebSocket(
             (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
@@ -64,31 +132,104 @@
             console.log("WebSocket connection established");
         };
 
+        var roundNo = 1;
         gameSocket.onmessage = function (e) {
+            console.log("some message received");
             const data = JSON.parse(e.data);
-            console.log("Message received:", data.message); // Debugging line
+            console.log("Message received:", data.type);
             const messageHandlers = {
-                player_joined: () => {
-                    if(data.message.length === 1){
-                        document.querySelector('.in-room-users').innerHTML = `In Room: ${data.message}`;
-                    }
-                    else if(data.message.length === 2){
-                        document.querySelector('.in-room-users').innerHTML = `In Room: ${data.message}`;
-                        document.querySelector('.waiting-to-join').style.display = "none";
-                        document.querySelector('.main-game-div').style.display = "flex";
-                        document.querySelector('.waiting-opponent-choice').style.display = "none";
-                    }
-                    console.log(`player joined message: ${data.message}`);
+                game_start: () => {
+                    document.querySelector('.opponent-name').innerHTML = data.opponent;
+                    document.querySelector('.waiting-to-join').style.display = "none";
+                    document.querySelector('.main-game-div').style.display = "flex";
+                    document.querySelector('.rounds-results').style.display = "flex";
+                    document.querySelector('.waiting-opponent-choice').style.display = "none";
+                    console.log("received game_start message");
                 },
 
+                round_result: () => {
+                    // Handle round result display
+                    const result = data.result;
+                    const you = JSON.parse(document.getElementById('you').textContent);
+                    const choices = data.choices;
+
+                    // setting the main-game-div for next round
+                    const mainGameDiv = document.querySelector('.main-game-div');
+                    document.querySelector('.waiting-opponent-choice').style.display = "none";
+                    document.querySelector('.select-choice-message').style.display = "block";
+                    document.querySelectorAll('.choice-button').forEach(button => {
+                        button.removeAttribute("disabled");
+                        button.classList.remove("disabled-button");
+                    });
+
+                    document.querySelector('.prev-round-result-container').style.display = "flex";
+                    document.querySelector('.prev-round-result-container').innerHTML += `
+                        <div class="choices choices-${roundNo}">
+                            <div class="your-choice your-choice-${roundNo}">You: </div>
+                            <div class="opponent-choice opponent-choice-${roundNo}">Opponent: </div>
+                        </div>
+                    `
+                    //displaying round result
+                    if(result === "win"){
+                        document.querySelector(`.your-choice-${roundNo}`).style.backgroundColor = "#4caf50"
+                        document.querySelector(`.your-choice-${roundNo}`).style.color = "white"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.backgroundColor = "#f44336"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.color = "white"
+                        document.querySelector(`.round-${roundNo}`).style.backgroundColor = "#4caf50";
+                        document.querySelector(`.round-${roundNo}`).style.color = "white";
+                        
+                    }else if(result === 'loss'){
+                        document.querySelector(`.your-choice-${roundNo}`).style.backgroundColor = "#f44336"
+                        document.querySelector(`.your-choice-${roundNo}`).style.color = "white"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.backgroundColor = "#4caf50"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.color = "white"
+                        document.querySelector(`.round-${roundNo}`).style.backgroundColor = "#f44336";
+                        document.querySelector(`.round-${roundNo}`).style.color = "white";
+                    }else{
+                        document.querySelector(`.your-choice-${roundNo}`).style.backgroundColor = "rgb(210,210,210)"
+                        document.querySelector(`.your-choice-${roundNo}`).style.color = "black"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.backgroundColor = "rgb(210,210,210)"
+                        document.querySelector(`.opponent-choice-${roundNo}`).style.color = "black"
+                        document.querySelector(`.round-${roundNo}`).style.backgroundColor = "rgb(210,210,210)";
+                        document.querySelector(`.round-${roundNo}`).style.color = "black";
+                    }
+
+                    const users = Object.keys(choices);
+                    users.forEach(user => {
+                        if(user === you){
+                            document.querySelector(`.your-choice-${roundNo}`).innerHTML = `You: ${choices[user]}`;
+                        }
+                        else{
+                            document.querySelector(`.opponent-choice-${roundNo}`).innerHTML = `Opponent: ${choices[user]}`;
+                        }
+                    });
+
+                    roundNo  = (roundNo + 1);
+                    if(roundNo > 3) roundNo=1;
+                    document.querySelector('.round-number').innerHTML = roundNo;
+
+                },
                 game_result: () => {
+                    console.log("result of game received");
                     // Handle game result display
-                    // document.querySelector('.result').innerText = data.result;
-                    console.log(`result message: ${data.result}`);
-                },
+                    const result = data.result;
+                    document.querySelector('.game-result').style.display = "flex";
+                    document.querySelector('.main-game-div').style.display = "none";
 
-                opponents_choice: () => {
-                    console.log(`opponents choice: ${data.message}`);
+                    console.log(`result: ${result}`);
+                    if(result === 'win'){
+                        document.querySelector('.you-lost').style.display = "none";
+                        document.querySelector('.you-draw').style.display = "none"; 
+                    }
+                    else if(result === 'loss'){
+                        document.querySelector('.you-won').style.display = "none";
+                        document.querySelector('.you-draw').style.display = "none"; 
+                    }
+                    else{
+                        document.querySelector('.you-lost').style.display = "none";
+                        document.querySelector('.you-won').style.display = "none"; 
+                    }
+                    document.querySelector('.play-again-container').style.display = "flex";
                 },
             };
 
@@ -131,6 +272,24 @@
             document.querySelector('.select-choice-message').style.display = "none";
             document.querySelector('.waiting-opponent-choice').style.display = "block";
         }));
+
+        document.getElementById("leave-room-round").addEventListener("click", () => {
+            console.log("leaving room after round completed");
+            window.location.pathname = "/game";
+        });
+
+        document.getElementById("play-again").addEventListener("click", () => {
+            console.log("playing the game again");
+            if (gameSocket.readyState === WebSocket.OPEN) {
+                gameSocket.send(JSON.stringify({
+                    'type': 'play_again',
+                }));
+                console.log("play again message sent");
+                // need to implement initialization before next game begin
+            } else {
+                console.error("WebSocket connection not open");
+            }
+        });
     </script>
 </body>
 </html>

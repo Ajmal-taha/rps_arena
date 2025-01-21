@@ -6,14 +6,41 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="profile-heading">Profile</h1>
-    <div class="personal-info-grid">
-        <div class="name field">Name:</div><div class="value">{{ user.username }}</div>
-        <div class="something field">Matches Played:</div><div class="value">69</div>
-        <div class="otherthing field">Won:</div><div class="value">30</div>
-        <div class="thisthing field">Lost:</div><div class="value">39</div>
-        <div class="thatthing field">Draw:</div><div class="value">0</div>
-        <div class="thatthing field">Points:</div><div class="value">1200</div>
-        <div class="thatthing field">Rank:</div><div class="value">12</div>
+<div class="profile-container">
+    <h1 class="profile-heading">Profile</h1>
+    <div class="profile-stats">
+        <div class="stat-row">
+            <span class="field">Name:</span>
+            <span class="value">{{ user_obj.user.username }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Matches Played:</span>
+            <span class="value">{{ user_obj.matches_played }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Won:</span>
+            <span class="value">{{ user_obj.wins }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Lost:</span>
+            <span class="value">{{ user_obj.losses }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Draw:</span>
+            <span class="value">{{ user_obj.draws }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Points:</span>
+            <span class="value">{{ user_obj.points }}</span>
+        </div>
+        <div class="stat-row">
+            <span class="field">Rank:</span>
+            <span class="value">{{ user_rank }}</span>
+        </div>
     </div>
+</div>
+
+<script>
+
+</script>
 {% endblock %}
