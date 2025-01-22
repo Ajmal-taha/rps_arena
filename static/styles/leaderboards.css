@@ -1,0 +1,142 @@
+/* General styling */
+body {
+    font-family: Oxanium ,'Arial';
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+.leaderboard-container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 20px 30px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-heading {
+    text-align: center;
+    font-size: 2rem;
+    color: #333333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.leaderboard-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-header,
+.leaderboard-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.leaderboard-header {
+    background: rgb(236, 236, 236);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.leaderboard-row:hover {
+    background-color: #4CAF50;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.first {
+    background-color: #FFD700;
+}
+
+.first:hover {
+    background-color: #ffc800;
+    transform: translateY(-3px);
+}
+
+.second {
+    background-color: #C0C0C0;
+}
+.second:hover {
+    background-color: #a5a5a5;
+    transform: translateY(-3px);
+}
+
+.third {
+    background-color: #B08D57;
+}
+.third:hover {
+    background-color: #a17a3f;
+    transform: translateY(-3px);
+}
+
+.rank {
+    width: 10%;
+    text-align: center;
+    font-weight: bold;
+    color: #333333;
+}
+
+.username {
+    width: 60%;
+    text-align: left;
+    font-weight: bold;
+    color: #333333;
+}
+
+.points {
+    width: 20%;
+    text-align: right;
+    font-weight: bold;
+    color: #333333;
+}
+
+.you-span{
+    font-weight: lighter;
+}
+
+/* Current user row styling */
+.current-user-row {
+    
+}
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+    .leaderboard-container {
+        padding: 15px 20px;
+    }
+
+    .leaderboard-heading {
+        font-size: 1.5rem;
+    }
+
+    .rank, .username, .points {
+        font-size: 0.9rem;
+    }
+
+    .leaderboard-row {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .rank, .points {
+        width: 100%;
+        text-align: left;
+    }
+
+    .username {
+        width: 100%;
+        text-align: left;
+        font-size: 1rem;
+    }
+}

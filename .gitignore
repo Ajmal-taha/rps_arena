@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environment
-venv/
-env/
 
 # Django stuff:
 db.sqlite3
@@ -16,10 +13,6 @@ db.sqlite3
 
 # Media files
 media/
-
-# Static files
-/staticfiles/
-/static/
 
 # Local development settings
 .env
@@ -37,27 +30,6 @@ media/
 *.sublime-project
 *.sublime-workspace
 
-# Node.js dependencies (if using npm or yarn in the project)
-node_modules/
-
-# Coverage reports
-htmlcov/
-.coverage
-.tox/
-.coverage.*
-
-# MyPy type checker files
-.mypy_cache/
-dmypy.json
-dmypy.sock
-
-# pytest
-.pytest_cache/
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints
-
 #extra files
 mydb.py
-battle_hands_project/settings.py
 rps_arena/migrations
