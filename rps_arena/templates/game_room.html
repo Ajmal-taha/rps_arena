@@ -286,6 +286,30 @@
                 }));
                 console.log("play again message sent");
                 // need to implement initialization before next game begin
+                // initializing waiting to join
+                document.querySelector(".waiting-to-join").style.display = "flex";
+                // initializing rounds-results container
+                document.querySelectorAll(".round-result").forEach(round_result => {
+                    round_result.style.backgroundColor = "rgb(226, 226, 226)";
+                    round_result.style.color = "black";
+                });
+                document.querySelector(".rounds-results").style.display = "none";
+                // initializing game-result container 
+                document.querySelector(".you-won").style.display = "block";
+                document.querySelector(".you-lost").style.display = "block";
+                document.querySelector(".you-draw").style.display = "block";
+                document.querySelector(".game-result").style.display = "none";
+                // initializing main-game container
+                document.querySelector(".waiting-opponent-choice").style.display = "none";
+                document.querySelector(".select-choice-message").style.display = "block";
+                document.querySelector(".main-game-div").style.display = "none";
+                // initializing prev-round-result-container
+                document.querySelector(".prev-round-result-container").innerHTML = "";
+                // initializing play-again-container
+                document.querySelector(".play-again-container").style.display = "none";
+                // waiting for opponent to join
+                document.querySelector('.opponent-name').innerHTML = "";
+                console.log("initialization for new game done");
             } else {
                 console.error("WebSocket connection not open");
             }

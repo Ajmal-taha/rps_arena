@@ -61,37 +61,24 @@
                 </div>
             {% endif %}
         {% endfor %}
-        <!-- <div class="leaderboard-row first">
-            <div class="rank"><img src="https://img.icons8.com/arcade/64/first-place-ribbon.png" alt="gold medal" width="30" height="30"></div>
-            <div class="username">JohnDoe</div>
-            <div class="points">1500</div>
-        </div>
-        <div class="leaderboard-row second">
-            <div class="rank"><img src="https://img.icons8.com/arcade/64/second-place-ribbon.png" alt="silver medal" width="30" height="30"></div>
-            <div class="username">JaneSmith</div>
-            <div class="points">1400</div>
-        </div>
-        <div class="leaderboard-row third">
-            <div class="rank"><img src="https://img.icons8.com/arcade/64/third-place-ribbon.png" alt="bronze medal" width="30" height="30"></div>
-            <div class="username">PlayerX</div>
-            <div class="points">1350</div>
-        </div> -->
         <!-- dummy users, to be removed later -->
-        <div class="leaderboard-row">
-            <div class="rank">4</div>
-            <div class="username">NoobMaster69</div>
-            <div class="points">1200</div>
-        </div>
-        <div class="leaderboard-row">
-            <div class="rank">5</div>
-            <div class="username">ProGamer</div>
-            <div class="points">1150</div>
-        </div>
-        <div class="leaderboard-row">
-            <div class="rank">6</div>
-            <div class="username">ProGamer2</div>
-            <div class="points">1005</div>
-        </div>
+        <!--
+            <div class="leaderboard-row">
+                <div class="rank">4</div>
+                <div class="username">NoobMaster69</div>
+                <div class="points">1200</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="rank">5</div>
+                <div class="username">ProGamer</div>
+                <div class="points">1150</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="rank">6</div>
+                <div class="username">ProGamer2</div>
+                <div class="points">1005</div>
+            </div>
+        -->
         <!-- Current user row -->
          {% if user_obj not in top_players %}
             <div class="leaderboard-row current-user-row">

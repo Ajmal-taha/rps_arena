@@ -11,19 +11,19 @@
         Game Rooms
     </div>
     <div class="create-room">
-        <sub-heading>Create a game room</sub-heading>
+        <sub-heading>Create or Join game room</sub-heading>
         <label for="game-room-name">Room Name: </label>
         <input type="text" class="game-room-name" placeholder="enter room name" required>
-        <button class="game-enter-button">Create</button>
+        <button class="game-enter-button">Create/Join</button>
     </div>
     <div class="join-room">
-        <sub-heading>Join a Game Room</sub-heading>
+        <sub-heading>Game Rooms</sub-heading>
         <input type="text" id="search-bar" placeholder="Search game rooms">
         <ul class="game_rooms" id="game-rooms-list">
             {% for game_room in game_rooms %}
             <li>
-                <p>room name: {{game_room.room_name}}</p>
-                <p>user count:{{game_room.user_count}}</p>
+                <p>room name: <span style="font-weight: bold;">{{game_room.room_name}}</span></p>
+                <!-- <p>user count:{{game_room.user_count}}</p> -->
                 <button class="game_room-join-button" data-room-name="{{game_room.room_name}}" data-user-count="{{game_room.user_count}}">Join</button>
             </li>
             {% endfor %}

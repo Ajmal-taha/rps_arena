@@ -73,7 +73,8 @@ def profile(request):
 @login_required
 def game(request):
     print('inside game method in views')
-    context = {'game_rooms': GameRoom.objects.all()}
+    game_rooms = GameRoom.objects.filter(user_count__lt = 2)
+    context = {'game_rooms': game_rooms}
     return render(request, 'game_page.html', context)
 
 @login_required

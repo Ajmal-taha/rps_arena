@@ -220,7 +220,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # Broadcast game result to the group if next_round > 3(all rounds played)
         if next_round > 3:
-            self.broadcast_game_result_message()
+            await self.broadcast_game_result_message()
 
     # broadcasts game result to all players in the group
     async def broadcast_game_result_message(self):
