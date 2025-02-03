@@ -92,11 +92,11 @@ WSGI_APPLICATION = 'battle_hands_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'my_database'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'Ajmal@c120'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),  # Set a proper default
-        'PORT': os.getenv('DB_PORT','5432'), # 3306-mysql , 5432-postgresql
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),  # Set a proper default
+        'PORT': os.getenv('DB_PORT'), # 3306-mysql , 5432-postgresql
     }
 }
 
