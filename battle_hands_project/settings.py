@@ -57,6 +57,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://battle-hands.onrender.com',
+]
+
+
 ROOT_URLCONF = 'battle_hands_project.urls'
 
 LOGIN_URL = 'login'
