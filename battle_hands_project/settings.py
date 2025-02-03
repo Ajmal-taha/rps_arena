@@ -26,7 +26,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'battle-hands.onrender.com',
+    '127.0.0.1',
+    'localhost',
+    ]
 
 
 # Application definition
