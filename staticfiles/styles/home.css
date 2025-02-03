@@ -1,0 +1,50 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Oxanium, Arial;
+}
+
+.home div {
+    margin: 10px;
+}
+
+.start-button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    font-size: 1rem;
+    font-family: Oxanium, Arial;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.login-link{
+    color: #4CAF50;
+    text-emphasis-color: #66c569;
+    text-decoration: underline;
+}
+
+.start-button:hover {
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+    transform: translate(-2px);
+}
+
+.start-button:active {
+    background-color: #9bbe9c;
+}
+
+.material-symbols-outlined {
+    font-size: 24px; /* Size of the icon */
+}
+
+.rock-button {
+    width: 6rem;
+    height: 6rem;
+}

@@ -11,8 +11,8 @@ cryptography==43.0.3
 daphne==4.1.2
 dj-database-url==2.3.0
 Django==5.0.4
-django-heroku==0.3.1
 django-redis==5.4.0
+gunicorn==23.0.0
 hyperlink==21.0.0
 idna==3.10
 incremental==24.7.2

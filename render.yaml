@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: rps-arena
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "daphne rps_arena.asgi:application --port $PORT --bind 0.0.0.0 -v2"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rps-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: rps-redis
+          type: redis

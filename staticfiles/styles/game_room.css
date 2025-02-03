@@ -1,0 +1,298 @@
+body {
+    font-family: Oxanium, Arail;
+    font-size: 1.3rem;
+    padding: 0;
+    margin: 0;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: #383737;
+    color: white;
+
+}
+
+.room-name-heading{
+    
+}
+
+.leave-button{
+    padding: 4px;
+    background-color: #f44336;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.leave-button:hover {
+    background-color: #f46459;
+}
+
+.in-room-users {
+    padding: 20px 10px;
+}
+
+.waiting-to-join {
+    padding: 20px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirm {
+    background-color: #f44336;
+    color: white;
+}
+
+.cancel {
+    background-color: #4caf50;
+    color: white;
+}
+
+.confirm, .cancel{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s ease
+}
+
+.confirm:hover{
+    background-color: #f46459
+} 
+
+.cancel:hover{
+    background-color: #5fb362;
+}
+
+/* Pop-up container (hidden by default) */
+.popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Pop-up box */
+.popup {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    width: 90%;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.main-game-div{
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.in-room-users {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.you-username, .opponent-username{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.symbol{
+    padding-left: 4px;
+}
+
+.your-name, .opponent-name{
+    font-weight: bold;
+    font-size: x-large;
+    padding-left: 5px;
+}
+
+.versus{
+    padding-left: 30px;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.rounds-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.round-result {
+    margin: 5px 10px;
+    padding: 0px 20px;
+    border-width: 4px;
+    background-color: rgb(226, 226, 226);
+    border-radius: 10px;
+}
+
+.game-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.you-won, .you-lost, .you-draw {
+    padding: 8px 10px;
+    margin-bottom: 14px;
+}
+
+.you-won {
+    border-radius: 5px;
+    background-color: #5aff2c;
+    color: white;
+}
+
+.you-lost {
+    border-radius: 5px;
+    background-color: rgb(255, 55, 55);
+    color: white;
+}
+
+.you-draw {
+    border-radius: 5px;
+    background-color: rgb(55, 118, 255);
+    color: white;
+}
+
+.round-number-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 20px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.round-number {
+    padding-left: 8px;
+}
+
+.choices-div {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.choice-button {
+    margin: 0 10px;
+    background-color: #4CAF50;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.choice-button:hover {
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+    transform: translate(-2px);
+}
+
+.choice-button:active {
+    background-color: #9bbe9c;
+}
+
+.disabled-button {
+    background-color:#6fa371;
+    cursor: not-allowed;
+}
+
+.select-choice-message {
+    margin-bottom: 14px;
+}
+
+.prev-round-result-container{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+.choices {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    margin: 10px auto;
+}
+
+.your-choice,
+.opponent-choice {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 40%;
+}
+
+.your-choice {
+    margin-right: 10px;
+}
+
+.opponent-choice {
+    margin-left: 10px;
+}
+
+.leave-room-round {
+    background-color: #f44336;
+    color: white;
+}
+
+.play-again {
+    background-color: #4caf50;
+    color: white;
+}
+
+.leave-room-round, .play-again{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s ease
+}
+
+.leave-room-round:hover{
+    background-color: #f46459
+} 
+
+.play-again:hover{
+    background-color: #5fb362;
+}
+
+.play-again-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
