@@ -3,7 +3,7 @@ services:
     name: rps-arena
     env: python
     buildCommand: "./build.sh"
-    startCommand: "daphne rps_arena.asgi:application --port $PORT --bind 0.0.0.0 -v2"
+    startCommand: "daphne battle_hands_project.asgi:application --port $PORT --bind 0.0.0.0 -v2"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
